@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0b1015" />
+    <meta
+      name="description"
+      content="Preview telescope mount paths, cable limits and exclusion zones. An educational simulator by hirsu."
+    />
+    <title>Pointing Lab / hirsu</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to simulator</a>
+    <header>
+      <a href="https://hrushikbarani-hub.github.io/">HIRSU / WORKSHOP ↗</a
+      ><span>POINTING LAB / 0.1</span
+      ><a href="https://github.com/hrushikbarani-hub/coordinate-motor-simulator"
+        >SOURCE ↗</a
+      >
+    </header>
+    <main id="main">
+      <section class="intro">
+        <p>SIMULATION / COORDINATES → MOTION</p>
+        <h1>Think through<br />the <em>movement.</em></h1>
+        <span>Test an idea before touching a motor.</span>
+      </section>
+      <p class="notice">
+        Illustrative mount geometry and user-defined limits. This tool sends no
+        hardware commands. A valid simulated path is not proof of physical
+        clearance.
+      </p>
+      <div class="layout">
+        <form id="controls" class="panel">
+          <h2>Set a mission</h2>
+          <fieldset>
+            <legend>Starting mount position</legend>
+            <div class="pair">
+              <label
+                >Continuous azimuth (°)<input
+                  name="fromAz"
+                  value="0"
+                  type="number"
+                  step="any"
+                  required /></label
+              ><label
+                >Elevation (°)<input
+                  name="fromAlt"
+                  value="25"
+                  type="number"
+                  step="any"
+                  required
+              /></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Target direction</legend>
+            <div class="pair">
+              <label
+                >Azimuth (° N→E)<input
+                  name="toAz"
+                  type="number"
+                  min="0"
+                  max="360"
+                  value="110"
+                  step="any"
+                  required /></label
+              ><label
+                >Elevation (°)<input
+                  name="toAlt"
+                  type="number"
+                  min="-90"
+                  max="90"
+                  value="45"
+                  step="any"
+                  required
+              /></label>
+            </div>
+            <details>
+              <summary>Convert approximate sky coordinates</summary>
+              <div class="pair">
+                <label
+                  >RA (hours)<input
+                    name="ra"
+                    type="number"
+                    step="any"
+                    value="2.4" /></label
+                ><label
+                  >Declination (°)<input
+                    name="dec"
+                    type="number"
+                    step="any"
+                    value="62" /></label
+                ><label
+                  >Latitude (° N)<input
+                    name="latitude"
+                    type="number"
+                    step="any"
+                    value="35" /></label
+                ><label
+                  >Longitude (° E)<input
+                    name="longitude"
+                    type="number"
+                    step="any"
+                    value="-105"
+                /></label>
+              </div>
+              <label>UTC time<input name="utc" type="datetime-local" /></label
+              ><button type="button" id="convert">
+                Use these sky coordinates
+              </button>
+              <p class="help">
+                Mean coordinates of date, approximate sidereal rotation. No
+                epoch conversion or atmospheric model. Below-horizon targets
+                will fail a normal mount's limits.
+              </p>
+            </details>
+          </fieldset>
+          <fieldset>
+            <legend>Illustrative axis limits</legend>
+            <div class="pair">
+              <label
+                >Min azimuth<input
+                  name="azMin"
+                  type="number"
+                  value="-270"
+                  required /></label
+              ><label
+                >Max azimuth<input
+                  name="azMax"
+                  type="number"
+                  value="270"
+                  required /></label
+              ><label
+                >Min elevation<input
+                  name="altMin"
+                  type="number"
+                  value="5"
+                  required /></label
+              ><label
+                >Max elevation<input
+                  name="altMax"
+                  type="number"
+                  value="85"
+                  required /></label
+              ><label
+                >Azimuth rate (°/s)<input
+                  name="azRate"
+                  type="number"
+                  value="20"
+                  min="1"
+                  max="90"
+                  step="any"
+                  required /></label
+              ><label
+                >Elevation rate (°/s)<input
+                  name="altRate"
+                  type="number"
+                  value="15"
+                  min="1"
+                  max="90"
+                  step="any"
+                  required
+              /></label>
+            </div>
+            <p class="help">
+              Azimuth is an unwrapped motor angle. 270° and −90° face the same
+              direction but use different cable travel.
+            </p>
+          </fieldset>
+          <fieldset>
+            <legend>
+              <label class="check"
+                ><input name="zoneEnabled" type="checkbox" checked />Apply an
+                exclusion box</label
+              >
+            </legend>
+            <div class="pair">
+              <label
+                >Min zone azimuth<input
+                  name="zoneAzMin"
+                  type="number"
+                  value="40"
+                  step="any" /></label
+              ><label
+                >Max zone azimuth<input
+                  name="zoneAzMax"
+                  type="number"
+                  value="70"
+                  step="any" /></label
+              ><label
+                >Min zone elevation<input
+                  name="zoneAltMin"
+                  type="number"
+                  value="0"
+                  step="any" /></label
+              ><label
+                >Max zone elevation<input
+                  name="zoneAltMax"
+                  type="number"
+                  value="35"
+                  step="any"
+              /></label>
+            </div>
+            <p class="help">
+              A rectangle in continuous motor-angle space, not a measured
+              physical object. Box edges are included.
+            </p>
+          </fieldset>
+          <button class="primary" type="submit">Plan candidate paths ↗</button>
+        </form>
+        <div>
+          <section class="panel stage">
+            <div class="stage-head">
+              <h2>Virtual mount</h2>
+              <span>ILLUSTRATIVE 3D</span>
+            </div>
+            <canvas
+              id="mount"
+              width="900"
+              height="550"
+              tabindex="0"
+              aria-label="3D mount preview. Drag or use left/right arrow keys to orbit the camera. The numerical position and movement controls are below."
+            ></canvas>
+            <p id="readout" aria-live="off">Azimuth 0° / Elevation 25°</p>
+            <div class="actions">
+              <button id="play" disabled>Preview motion</button
+              ><button id="pause" disabled>Pause</button
+              ><button id="reset">Reset preview</button>
+            </div>
+            <label class="scrub"
+              >Mission progress <output id="progress-label">0%</output
+              ><input
+                type="range"
+                id="scrub"
+                min="0"
+                max="1000"
+                value="0" /></label
+            ><label class="check"
+              ><input id="reduced-motion" type="checkbox" />Use manual preview
+              only</label
+            >
+            <p class="help">
+              The model is not the measured Robo Telescope. Animation duration
+              follows the configured peak rates. No acceleration or torque limit
+              is verified.
+            </p>
+          </section>
+          <section class="panel results" aria-labelledby="result-title">
+            <h2 id="result-title">The proposed route</h2>
+            <p id="status" role="status">Choose settings and plan a mission.</p>
+            <div id="result"></div>
+          </section>
+          <section class="panel">
+            <h2>How this connects to my telescope</h2>
+            <p>
+              Robo Telescope previously turned motors toward computer-entered
+              sky coordinates and is currently under repair. This simulator
+              explores the planning problem independently.
+            </p>
+            <p>
+              <a href="https://hrushikbarani-hub.github.io/#lab"
+                >Explore the original build's 3D model ↗</a
+              >
+              ·
+              <a href="https://hrushikbarani-hub.github.io/observatory-planner/"
+                >Plan an observing night ↗</a
+              >
+            </p>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer>LOCAL CALCULATIONS / NO MOTOR CONNECTION / SOURCE ON GITHUB</footer>
+  </body>
+</html>
