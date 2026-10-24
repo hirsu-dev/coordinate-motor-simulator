@@ -74,8 +74,7 @@ export function buildMotion(from, direction, config, zones = []) {
       for (let i = 1; i < points.length; i++) {
         const a = points[i - 1],
           b = points[i];
-        
-        
+
         const seconds =
           1.875 *
           Math.max(
