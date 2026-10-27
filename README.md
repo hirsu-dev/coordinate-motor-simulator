@@ -32,7 +32,7 @@ The planner evaluates direct and two axis-order strategies; it is not an exhaust
 
 Sky conversion uses the mean sidereal-time polynomial in [JPL's Horizons documentation](https://ssd.jpl.nasa.gov/horizons/manual.html#greenwich-mean-sidereal-time) and spherical rotation. RA is decimal hours, declination is degrees, longitude is east-positive and time is UTC. Dates are limited to 2020–2050. Coordinates are treated as mean coordinates of date; there is no catalog-epoch conversion, refraction, precession or moving-body model. Azimuth near zenith is ill-conditioned. Do not use this for solar pointing or real hardware control.
 
-Six checks cover cable wrapping, exact box intersections, unreachable paths, peak speeds, polar coordinate conversion and the real form/scrubber events. Visual browser QA was unavailable for this release. The canvas model is supplemental; numerical readouts, candidate tables and manual scrub controls work without canvas. Animation stops when the page hides; reduced motion defaults to manual preview.
+Checks cover cable wrapping, exact box intersections, unreachable paths, peak speeds, polar coordinate conversion and form/scrubber events. Visual browser testing remains outstanding. The canvas model is supplemental; numerical readouts, candidate tables and manual scrub controls work without canvas. Animation stops when the page hides; reduced motion defaults to manual preview.
 
 ## Files
 
