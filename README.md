@@ -1,6 +1,6 @@
 # Pointing Lab: Coordinate-to-Motor Simulator
 
-Try telescope mount movements before you connect a motor. [Open the browser app](https://hrushikbarani-hub.github.io/coordinate-motor-simulator/).
+Try telescope mount movements before you connect a motor. [Open the browser app](https://hirsu-dev.github.io/coordinate-motor-simulator/).
 
 This is a simulation inspired by my Robo Telescope, which is currently under repair. It uses an illustrative 3D mount, continuous azimuth angles, user-defined axis limits and an exclusion box. It never sends hardware commands.
 
